@@ -43,8 +43,60 @@ fibonacci n = (seg, res)
     res = (fst x) + (snd x)
 
 myLength :: [Int] -> Int
-myLength n 
-    | n == [] = 0
-    | otherwise = 
+myLength n
+  | n == [] = 0
+  | otherwise = 1 + myLength (tail n)
 
+myMaximum :: [Int] -> Int
+myMaximum array = myMaximumRecursive (tail array) (head array)
 
+myMaximumRecursive :: [Int] -> Int -> Int
+myMaximumRecursive array max
+  | array == [] = max
+  | head array <= max = myMaximumRecursive (tail array) max
+  | head array > max = myMaximumRecursive (tail array) (head array)
+
+average :: [Int] -> Float
+average array
+  | array == [] = 0
+  | otherwise = (fromIntegral (mySum array)) / (fromIntegral (myLength array))
+
+mySum :: [Int] -> Int
+mySum array
+  | array == [] = 0
+  | otherwise = (head array) + mySum (tail array)
+
+buildPalindrome :: [Int] -> [Int]
+buildPalindrome array = (reverse array) ++ array
+
+remove :: [Int] -> [Int] -> [Int]
+remove arrayX arrayY
+  | arrayY == [] = arrayX
+  | elem (head arrayY) arrayX = remove (removeElem arrayX (head arrayY) 0) (tail arrayY)
+  | otherwise = remove arrayX (tail arrayY)
+
+removeElem :: [Int] -> Int -> Int -> [Int]
+removeElem array num index
+  | not (elem num array) || index >= myLength array = array
+  | num == (array !! index) = removeElem (take index array ++ (drop (index + 1) array)) num (index + 1)
+  | otherwise = removeElem array num (index + 1)
+
+flatten :: [[Int]] -> [Int]
+flatten matrix = concat matrix
+
+oddsNevens :: [Int] -> ([Int], [Int])
+oddsNevens array = ((evens array 0), (odds array 0))
+
+odds :: [Int] -> Int -> [Int]
+odds array index
+  | index >= myLength array = array
+  | array == [] = []
+  | mod (array !! index) 2 /= 0 = odds (take index array ++ (drop (index + 1) array)) (index)
+  | otherwise = odds array (index + 1)
+
+evens :: [Int] -> Int -> [Int]
+evens array index
+  | index >= myLength array = array
+  | array == [] = []
+  | mod (array !! index) 2 == 0 = evens (take index array ++ (drop (index + 1) array)) (index)
+  | otherwise = evens array (index + 1)
